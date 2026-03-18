@@ -1,0 +1,6 @@
+@TodoGraphQL_HostAddress = http://localhost:5206
+
+GET {{TodoGraphQL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
