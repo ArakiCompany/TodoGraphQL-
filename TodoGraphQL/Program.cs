@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(["https://todo-react-app-one-phi.vercel.app/","http://todo-react-app-one-phi.vercel.app/"])
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
