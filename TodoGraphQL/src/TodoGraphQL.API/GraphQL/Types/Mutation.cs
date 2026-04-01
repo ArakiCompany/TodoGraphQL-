@@ -1,8 +1,5 @@
 using HotChocolate.Authorization;
 using System.Security.Claims;
-using FluentValidation;
-using TodoGraphQL.API.GraphQL.Inputs;
-using TodoGraphQL.API.GraphQL.Validators;
 using TodoGraphQL.Application.DTOs;
 using TodoGraphQL.Application.UseCases.Todos;
 
@@ -12,14 +9,12 @@ public class Mutation
 {
     [Authorize]
     public async Task<TodoDto> AddTodo(
-        AddTodoInput input,
+        string title,
         [Service] AddTodoUseCase useCase,
-        [Service] IValidator<AddTodoInput> validator,
         ClaimsPrincipal claimsPrincipal)
     {
-        await validator.ValidateAndThrowGraphQLAsync(input);
         var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        return await useCase.ExecuteAsync(input.Title, userId);
+        return await useCase.ExecuteAsync(title, userId);
     }
 
     [Authorize]

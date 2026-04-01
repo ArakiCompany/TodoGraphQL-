@@ -5,8 +5,6 @@ using TodoGraphQL.API.Application;
 using TodoGraphQL.API.GraphQL.Types;
 using TodoGraphQL.Application.UseCases.Admin;
 using TodoGraphQL.Infrastructure;
-using FluentValidation;
-using TodoGraphQL.API.GraphQL.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +22,6 @@ builder.Services.AddCors(options =>
 // Camadas
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
-builder.Services.AddValidatorsFromAssemblyContaining<AddTodoValidator>();
 builder.Services.AddScoped<UpdateUserRoleUseCase>();
 
 builder.Services.AddHttpContextAccessor();
