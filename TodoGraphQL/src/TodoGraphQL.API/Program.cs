@@ -7,6 +7,9 @@ using TodoGraphQL.Application.UseCases.Admin;
 using TodoGraphQL.Infrastructure;
 using FluentValidation;
 using TodoGraphQL.API.GraphQL.Validators;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+using TodoGraphQL.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,10 +61,53 @@ builder.Services
     .AddAuthorization()
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429; // Too Many Requests
+
+    // Política geral — 60 req/min por IP
+    options.AddPolicy("general", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    // Política para auth — 5 req/min por IP
+    options.AddPolicy("auth", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    // Resposta customizada quando limite é atingido
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            """{"errors":[{"message":"Muitas requisições. Tente novamente em instantes."}]}""",
+            cancellationToken);
+    };
+});
+
 var app = builder.Build();
 
+app.UseRateLimiter();
+app.UseMiddleware<AuthRateLimitMiddleware>();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGraphQL();
+app.MapGraphQL().RequireRateLimiting("general");
 app.Run();
