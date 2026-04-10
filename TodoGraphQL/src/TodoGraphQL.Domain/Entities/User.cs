@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 public enum UserRole
 {
     User,
+    Business,
     Admin
 }
 

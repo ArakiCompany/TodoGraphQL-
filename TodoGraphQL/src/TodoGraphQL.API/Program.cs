@@ -61,7 +61,7 @@ try
     builder.Services.AddInfrastructure();
     builder.Services.AddApplication();
     builder.Services.AddValidatorsFromAssemblyContaining<AddTodoValidator>();
-
+    builder.Services.AddScoped<GetUsersUseCase>();
     builder.Services.AddScoped<UpdateUserRoleUseCase>();
 
     builder.Services.AddHttpContextAccessor();
@@ -88,6 +88,7 @@ try
     builder.Services
         .AddGraphQLServer()
         .AddQueryType<Query>()
+        .AddTypeExtension<AdminQuery>() 
         .AddMutationType<Mutation>()
         .AddTypeExtension<AuthMutation>()
         .AddTypeExtension<AdminMutation>()

@@ -26,4 +26,7 @@ public class UserRepository : IUserRepository
         var update = Builders<User>.Update.Set("Role", role);
         await _context.Users.UpdateOneAsync(u => u.Id == id, update);
     }
+
+     public async Task<List<User>> GetAllAsync()
+        => await _context.Users.Find(_ => true).ToListAsync();
 }
