@@ -32,3 +32,4 @@ jobs:
           Jwt__Secret: ${{ secrets.JWT_SECRET }}
           Jwt__Issuer: ${{ secrets.JWT_ISSUER }}
           Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
+          GEMINI_ApiKey: ${{ secrets.GEMINI_KEY }}

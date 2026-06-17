@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<ITodoRepository, TodoRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFinanceRepository, FinanceRepository>(); // ← novo
+        services.AddScoped<IAiService, GeminiService>();
         services.AddScoped<ITokenService, TokenService>();
         return services;
     }

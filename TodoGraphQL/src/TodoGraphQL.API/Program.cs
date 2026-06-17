@@ -12,6 +12,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using TodoGraphQL.API.Middleware;
 using TodoGraphQL.Application.UseCases.Finance;
+using TodoGraphQL.Application.UseCases.Todos;
 
 
 
@@ -66,6 +67,7 @@ try
     builder.Services.AddScoped<UpdateUserRoleUseCase>();
     builder.Services.AddScoped<GetFinanceUseCase>();
     builder.Services.AddScoped<SaveFinanceUseCase>();
+    builder.Services.AddScoped<GenerateTodosUseCase>();
 
     builder.Services.AddHttpContextAccessor();
 
@@ -97,6 +99,7 @@ try
         .AddTypeExtension<AuthMutation>()
         .AddTypeExtension<AdminMutation>()
         .AddTypeExtension<FinanceMutation>()
+        .AddTypeExtension<AiMutation>()
         .AddAuthorization()
         .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 
