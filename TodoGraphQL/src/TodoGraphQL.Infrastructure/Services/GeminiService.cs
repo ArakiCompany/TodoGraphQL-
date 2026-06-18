@@ -19,7 +19,7 @@ public class GeminiService : IAiService
     {
         _http = new HttpClient();
         _apiKey = config["Gemini:ApiKey"]
-            ?? throw new InvalidOperationException("Gemini API key não configurada.");
+            ?? throw new InvalidOperationException("Gemini API key não configurada corretamente.");
         _logger = logger;
     }
 
