@@ -119,4 +119,4 @@ public class GeminiService : IAiService
         _logger.LogError(ex, "Falha crítica no GeminiService ao processar requisição.");
         throw; // Ou retorne uma lista vazia/erro amigável se preferir não quebrar a mutation
     }
-}
+}}
